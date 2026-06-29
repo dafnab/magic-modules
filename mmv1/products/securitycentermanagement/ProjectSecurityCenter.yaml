@@ -93,24 +93,4 @@ properties:
           type: String
           description: Represents the Security Command Center service that the service account is used for.
           output: true
-  - name: dataResidencySettings
-    type: NestedObject
-    description: |
-      Data residency settings for the Security Center resource.
-    required: false
-    properties:
-      - name: dataResidencyEnablementState
-        type: Enum
-        description: |
-          The enablement state of data residency.
-        required: true
-        enum_values:
-          - DATA_RESIDENCY_ENABLEMENT_STATE_UNSPECIFIED
-          - DISABLED
-          - ENABLED
-      - name: location
-        type: String
-        description: |
-          The location where Security Command Center data is stored.
-        required: false
-        immutable: true
+
