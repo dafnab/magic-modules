@@ -1,0 +1,4 @@
+resource "google_scc_management_organization_security_center" "{{$.PrimaryResourceId}}" {
+  organization = "{{index $.TestEnvVars "org_id"}}"
+  billing_tier = "STANDARD"
+}

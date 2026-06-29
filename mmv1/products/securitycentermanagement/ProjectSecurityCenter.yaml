@@ -1,0 +1,116 @@
+# Copyright 2026 Google Inc.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+name: ProjectSecurityCenter
+description: |
+  Represents the Security Center resource for a project, containing settings
+  and state information about the Security Center instance.
+references:
+  guides:
+    Onboarding Security Command Center: https://cloud.google.com/security-command-center/docs/onboarding
+  api: https://cloud.google.com/security-command-center/docs/reference/security-center-management/rest/v1/projects.locations/getSecurityCenter
+docs:
+base_url: projects/{{project}}/locations/{{location}}/securityCenter
+self_link: projects/{{project}}/locations/{{location}}/securityCenter
+# This is a singleton resource that is already created (or created on first get/update),
+# so create is really an update, and therefore should be PATCHed.
+create_verb: PATCH
+update_verb: PATCH
+# This is a singleton resource that cannot be deleted, so skip delete.
+exclude_delete: true
+import_format:
+  - projects/{{project}}/locations/{{location}}/securityCenter
+timeouts:
+  insert_minutes: 20
+  update_minutes: 20
+  delete_minutes: 20
+samples:
+  - name: scc_management_project_security_center_basic
+    primary_resource_id: example
+    exclude_test: true
+    steps:
+      - name: scc_management_project_security_center_basic
+parameters:
+  - name: location
+    type: String
+    description: |
+      Location ID of the parent project. If not provided, 'global' will be used as the default location.
+    url_param_only: true
+    required: false
+    immutable: true
+    default_value: global
+properties:
+  - name: name
+    type: String
+    description: |
+      The resource name of the Security Center instance.
+    output: true
+  - name: billingTier
+    type: Enum
+    description: |
+      The billing tier for Security Command Center.
+    required: true
+    enum_values:
+      - STANDARD
+      - PREMIUM
+  - name: state
+    type: Enum
+    description: |
+      The current state of the Security Center resource.
+    output: true
+    enum_values:
+      - PENDING
+      - SUCCEEDED
+      - FAILED
+  - name: serviceAccounts
+    type: Array
+    description: |
+      The service accounts used by Security Command Center for this resource.
+    output: true
+    item_type:
+      type: NestedObject
+      properties:
+        - name: principal
+          type: String
+          description: The email address representing the service agent.
+          output: true
+        - name: role
+          type: String
+          description: The IAM role that the user must grant to the service agent.
+          output: true
+        - name: service
+          type: String
+          description: Represents the Security Command Center service that the service account is used for.
+          output: true
+  - name: dataResidencySettings
+    type: NestedObject
+    description: |
+      Data residency settings for the Security Center resource.
+    required: false
+    properties:
+      - name: dataResidencyEnablementState
+        type: Enum
+        description: |
+          The enablement state of data residency.
+        required: true
+        enum_values:
+          - DATA_RESIDENCY_ENABLEMENT_STATE_UNSPECIFIED
+          - DISABLED
+          - ENABLED
+      - name: location
+        type: String
+        description: |
+          The location where Security Command Center data is stored.
+        required: false
+        immutable: true
